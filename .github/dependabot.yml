@@ -13,6 +13,7 @@ updates:
   - package-ecosystem: "gitsubmodule"
     directory: "/"
     allow:
-      - dependency-name: "contracts/lib/tnt-core"
+      - dependency-name: "contracts/lib/eigenlayer-middleware"
+      - dependency-name: "contracts/lib/forge-std"
     schedule:
       interval: "daily"

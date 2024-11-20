@@ -1,6 +1,6 @@
 # <h1 align="center"> An EigenLayer AVS 🌐 </h1>
 
-**A simple Hello World AVS for EigenLayer**
+**A simple Hello World AVS for EigenLayer with the BLS-based Contract Configuration**
 
 ## 📚 Prerequisites
 

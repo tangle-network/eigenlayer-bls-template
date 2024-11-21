@@ -30,9 +30,9 @@ jobs:
       - name: Install Foundry
         run: |
           curl -L https://foundry.paradigm.xyz | bash
-          source $HOME/.bashrc
-          export PATH="$HOME/.foundry/bin:$PATH"
-          foundryup
+          . $HOME/.bashrc
+          . $HOME/.profile
+          $HOME/.foundry/bin/foundryup
       - name: Verify Forge installation
         run: forge --version
       - uses: dtolnay/rust-toolchain@stable

@@ -10,10 +10,3 @@ updates:
     schedule:
       interval: "daily"
     open-pull-requests-limit: 5
-  - package-ecosystem: "gitsubmodule"
-    directory: "/"
-    allow:
-      - dependency-name: "contracts/lib/eigenlayer-middleware"
-      - dependency-name: "contracts/lib/forge-std"
-    schedule:
-      interval: "daily"

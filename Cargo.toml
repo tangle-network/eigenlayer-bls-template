@@ -46,6 +46,7 @@ features = ["getrandom"]
 
 [build-dependencies]
 blueprint-metadata = "0.1.6"
+blueprint-build-utils = { git = "https://github.com/webb-tools/gadget" }
 
 [dev-dependencies]
 testcontainers = { version = "0.20.1" }

@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.13;
 
-import "@eigenlayer/contracts/libraries/BytesLib.sol";
-import "hello/IHelloTaskManager.sol";
-import "@eigenlayer-middleware/src/ServiceManagerBase.sol";
+import "eigenlayer-contracts/src/contracts/libraries/BytesLib.sol";
+import "contracts/src/IHelloTaskManager.sol";
+//import "@eigenlayer-middleware/src/ServiceManagerBase.sol";
+import "eigenlayer-middleware/src/ServiceManagerBase.sol";
 
 /**
  * @title Primary entrypoint for procuring services from Hello.
@@ -26,12 +27,14 @@ contract HelloServiceManager is ServiceManagerBase {
 
     constructor(
         IAVSDirectory _avsDirectory,
+        IRewardsCoordinator _rewardsCoordinator,
         IRegistryCoordinator _registryCoordinator,
         IStakeRegistry _stakeRegistry,
         IHelloTaskManager _helloTaskManager
     )
         ServiceManagerBase(
             _avsDirectory,
+            _rewardsCoordinator,
             _registryCoordinator,
             _stakeRegistry
         )

@@ -30,23 +30,18 @@ jobs:
       - name: Install Foundry
         shell: bash
         run: |
-          echo "Current PATH: $PATH"
-          echo "Current working directory: $(pwd)"
-          echo "Home directory: $HOME"
+          echo "Initial PATH: $PATH"
           
           curl -L https://foundry.paradigm.xyz | bash
           
-          echo "Contents of ~/.foundry directory:"
-          ls -la ~/.foundry
-          echo "Contents of ~/.foundry/bin directory:"
-          ls -la ~/.foundry/bin
+          echo "Attempting to source profile files..."
+          source /home/runner/.bashrc || echo "Failed to source .bashrc"
           
-          echo "Updated PATH: $PATH"
-          which foundryup || echo "foundryup not in PATH"
+          echo "After sourcing PATH: $PATH"
+          echo "Expected foundryup location: /home/runner/.foundry/bin/foundryup"
           
-          PATH="/home/runner/.foundry/bin:$PATH"
-          echo "Final PATH: $PATH"
-          which foundryup || echo "foundryup still not in PATH"
+          which foundryup || echo "foundryup not found in PATH"
+          ls -la "$HOME/.foundry/bin" || echo "foundry/bin directory not found"
           
           foundryup
       - name: Verify Forge installation

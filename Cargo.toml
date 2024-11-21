@@ -38,9 +38,13 @@ alloy-contract = { version = "0.1" }
 alloy-consensus = { version = "0.1" }
 alloy-transport = { version = "0.1" }
 alloy-transport-http = { version = "0.1" }
+serde = { version = "1.0.213", features = ["derive"] }
 
+# TODO: Replace with release once merged and released
 [dependencies.gadget-sdk]
-version = "0.4.0"
+#version = "0.4.0"
+git = "https://github.com/webb-tools/gadget"
+branch = "donovan/eigen-templates"
 default-features = false
 features = ["getrandom"]
 

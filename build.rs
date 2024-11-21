@@ -1,0 +1,4 @@
+fn main() {
+    let contract_dirs: Vec<&str> = vec!["./contracts"];
+    blueprint_build_utils::build_contracts(contract_dirs);
+}

@@ -1900,6 +1900,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "blueprint-build-utils"
+version = "0.1.0"
+source = "git+https://github.com/webb-tools/gadget#851c73fbb31280046cb1676009a33affd086971c"
+
+[[package]]
 name = "blueprint-metadata"
 version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1907,7 +1912,7 @@ checksum = "4f8754ff7a709cf0643f82093fff582192a36afe3b075cde8e752ad9e39d35ed"
 dependencies = [
  "cargo_metadata",
  "fs2",
- "gadget-blueprint-proc-macro-core",
+ "gadget-blueprint-proc-macro-core 0.1.5",
  "rustdoc-types",
  "serde",
  "serde_json",
@@ -3451,6 +3456,40 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigenlayer-bls-blueprint-template"
+version = "0.1.0"
+dependencies = [
+ "alloy-consensus",
+ "alloy-contract",
+ "alloy-json-abi",
+ "alloy-network",
+ "alloy-node-bindings",
+ "alloy-primitives 0.7.7",
+ "alloy-provider",
+ "alloy-pubsub",
+ "alloy-rpc-client 0.4.2",
+ "alloy-rpc-types",
+ "alloy-rpc-types-eth",
+ "alloy-signer",
+ "alloy-signer-local",
+ "alloy-sol-types 0.7.7",
+ "alloy-transport 0.1.4",
+ "alloy-transport-http 0.1.4",
+ "async-trait",
+ "blueprint-build-utils",
+ "blueprint-metadata",
+ "color-eyre",
+ "eigensdk",
+ "gadget-sdk",
+ "serde",
+ "structopt",
+ "testcontainers",
+ "tokio",
+ "tracing",
+ "tracing-subscriber 0.3.18",
+]
+
+[[package]]
 name = "eigensdk"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4378,11 +4417,10 @@ dependencies = [
 
 [[package]]
 name = "gadget-blueprint-proc-macro"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9279fa5ac3579da5e1c5467c395aae4c910cc63a702fcae097d529687398a4b7"
+version = "0.4.0"
+source = "git+https://github.com/webb-tools/gadget?branch=donovan/eigen-templates#1c3b68e140cb12def2250e641e14836ab7ac7bea"
 dependencies = [
- "gadget-blueprint-proc-macro-core",
+ "gadget-blueprint-proc-macro-core 0.2.0",
  "indexmap 2.6.0",
  "itertools 0.13.0",
  "proc-macro2",
@@ -4403,10 +4441,29 @@ dependencies = [
 ]
 
 [[package]]
-name = "gadget-context-derive"
+name = "gadget-blueprint-proc-macro-core"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c2f15fa82798ae66fec9bea17791a5f37f200ed9803158b08180fd6ba85737c1"
+source = "git+https://github.com/webb-tools/gadget?branch=donovan/eigen-templates#1c3b68e140cb12def2250e641e14836ab7ac7bea"
+dependencies = [
+ "cid",
+ "ethereum-types",
+ "serde",
+]
+
+[[package]]
+name = "gadget-blueprint-serde"
+version = "0.2.0"
+source = "git+https://github.com/webb-tools/gadget?branch=donovan/eigen-templates#1c3b68e140cb12def2250e641e14836ab7ac7bea"
+dependencies = [
+ "paste",
+ "serde",
+ "tangle-subxt",
+]
+
+[[package]]
+name = "gadget-context-derive"
+version = "0.2.1"
+source = "git+https://github.com/webb-tools/gadget?branch=donovan/eigen-templates#1c3b68e140cb12def2250e641e14836ab7ac7bea"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4416,8 +4473,7 @@ dependencies = [
 [[package]]
 name = "gadget-io"
 version = "0.0.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8ff8d951c0776ee79a2594634f49f9f6b6006eff55ed7c61b033c84b33f4f839"
+source = "git+https://github.com/webb-tools/gadget?branch=donovan/eigen-templates#1c3b68e140cb12def2250e641e14836ab7ac7bea"
 dependencies = [
  "cfg-if",
  "clap 4.5.20",
@@ -4438,11 +4494,11 @@ dependencies = [
 
 [[package]]
 name = "gadget-sdk"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "155e6e50f8d4651766c2d597132b421cc19f23fddcde752f8014363b98140de0"
+version = "0.5.0"
+source = "git+https://github.com/webb-tools/gadget?branch=donovan/eigen-templates#1c3b68e140cb12def2250e641e14836ab7ac7bea"
 dependencies = [
  "alloy-contract",
+ "alloy-json-abi",
  "alloy-network",
  "alloy-primitives 0.7.7",
  "alloy-provider",
@@ -4463,6 +4519,7 @@ dependencies = [
  "bincode2",
  "bollard",
  "clap 4.5.20",
+ "color-eyre",
  "dashmap 6.1.0",
  "ed25519-zebra 4.0.3",
  "eigensdk",
@@ -4470,7 +4527,8 @@ dependencies = [
  "failure",
  "futures",
  "gadget-blueprint-proc-macro",
- "gadget-blueprint-proc-macro-core",
+ "gadget-blueprint-proc-macro-core 0.2.0",
+ "gadget-blueprint-serde",
  "gadget-context-derive",
  "gadget-io",
  "getrandom",
@@ -10823,38 +10881,6 @@ checksum = "4f599bd7ca042cfdf8f4512b277c02ba102247820f9d9d4a9f521f496751a6ef"
 dependencies = [
  "rustix 0.38.37",
  "windows-sys 0.59.0",
-]
-
-[[package]]
-name = "test"
-version = "0.1.0"
-dependencies = [
- "alloy-consensus",
- "alloy-contract",
- "alloy-json-abi",
- "alloy-network",
- "alloy-node-bindings",
- "alloy-primitives 0.7.7",
- "alloy-provider",
- "alloy-pubsub",
- "alloy-rpc-client 0.4.2",
- "alloy-rpc-types",
- "alloy-rpc-types-eth",
- "alloy-signer",
- "alloy-signer-local",
- "alloy-sol-types 0.7.7",
- "alloy-transport 0.1.4",
- "alloy-transport-http 0.1.4",
- "async-trait",
- "blueprint-metadata",
- "color-eyre",
- "eigensdk",
- "gadget-sdk",
- "structopt",
- "testcontainers",
- "tokio",
- "tracing",
- "tracing-subscriber 0.3.18",
 ]
 
 [[package]]

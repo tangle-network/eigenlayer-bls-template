@@ -28,11 +28,27 @@ jobs:
             --define rust-ci=true
             --define release-ci=true
       - name: Install Foundry
+        shell: bash
         run: |
+          echo "Current PATH: $PATH"
+          echo "Current working directory: $(pwd)"
+          echo "Home directory: $HOME"
+          
           curl -L https://foundry.paradigm.xyz | bash
-          . $HOME/.bashrc
-          . $HOME/.profile
-          $HOME/.foundry/bin/foundryup
+          
+          echo "Contents of ~/.foundry directory:"
+          ls -la ~/.foundry
+          echo "Contents of ~/.foundry/bin directory:"
+          ls -la ~/.foundry/bin
+          
+          echo "Updated PATH: $PATH"
+          which foundryup || echo "foundryup not in PATH"
+          
+          PATH="/home/runner/.foundry/bin:$PATH"
+          echo "Final PATH: $PATH"
+          which foundryup || echo "foundryup still not in PATH"
+          
+          foundryup
       - name: Verify Forge installation
         run: forge --version
       - uses: dtolnay/rust-toolchain@stable

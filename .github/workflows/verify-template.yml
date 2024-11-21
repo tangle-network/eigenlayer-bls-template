@@ -28,23 +28,10 @@ jobs:
             --define rust-ci=true
             --define release-ci=true
       - name: Install Foundry
-        shell: bash
-        run: |
-          echo "Initial PATH: $PATH"
-          
-          curl -L https://foundry.paradigm.xyz | bash
-          
-          echo "Attempting to source profile files..."
-          source /home/runner/.bashrc || echo "Failed to source .bashrc"
-          
-          echo "After sourcing PATH: $PATH"
-          echo "Expected foundryup location: /home/runner/.foundry/bin/foundryup"
-          
-          which foundryup || echo "foundryup not found in PATH"
-          ls -la "$HOME/.foundry/bin" || echo "foundry/bin directory not found"
-          
-          foundryup
-      - name: Verify Forge installation
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+      - name: Show forge version
         run: forge --version
       - uses: dtolnay/rust-toolchain@stable
         with:

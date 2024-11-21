@@ -2,7 +2,7 @@
 name = "eigenlayer-middleware"
 version = "0.2.1"
 git = "https://github.com/Layr-Labs/eigenlayer-middleware.git"
-rev = "v0.2.1-mainnet-rewards"
+rev = "74438b7915c35ca5a0d312654716160c2499169d"
 
 [[dependencies]]
 name = "forge-std"

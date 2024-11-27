@@ -1,0 +1,79 @@
+[package]
+name = "{{project-name}}"
+version = "0.1.0"
+edition = "2021"
+description = "{{project-description}}"
+authors = ["{{authors}}"]
+license = "MIT OR Apache-2.0"
+homepage = "{{project-homepage}}"
+repository = "https://github.com/{{gh-username}}/{{project-name}}"
+readme = "README.md"
+categories = ["cryptography", "cryptography::cryptocurrencies"]
+keywords = ["tangle", "blueprint", "avs"]
+rust-version = "1.81"
+
+[dependencies]
+eigensdk = { version = "0.1.0", features = ["full", "utils", "types"] }
+tracing = "0.1"
+async-trait = "0.1"
+color-eyre = "0.6"
+structopt = "0.3.26"
+tokio = { version = "^1", default-features = false, features = ["full"] }
+tracing-subscriber = { version = "0.3", features = ["parking_lot", "env-filter"] }
+
+# Alloy crates
+alloy-primitives = "0.7.2"
+alloy-json-abi = "0.7.2"
+alloy-sol-types = "0.7.2"
+alloy-rpc-client = "0.4.2"
+alloy-rpc-types = { version = "0.1" }
+alloy-rpc-types-eth = { version = "0.1" }
+alloy-provider = { version = "0.1", default-features = false, features = ["reqwest", "ws"] }
+alloy-pubsub = { version = "0.1" }
+alloy-signer = { version = "0.1" }
+alloy-signer-local = { version = "0.1" }
+alloy-network = { version = "0.1" }
+alloy-node-bindings = "0.4.2"
+alloy-contract = { version = "0.1" }
+alloy-consensus = { version = "0.1" }
+alloy-transport = { version = "0.1" }
+alloy-transport-http = { version = "0.1" }
+serde = { version = "1.0.213", features = ["derive"] }
+
+# TODO: Replace with release once merged and released
+[dependencies.gadget-sdk]
+#version = "0.4.0"
+git = "https://github.com/webb-tools/gadget"
+branch = "donovan/eigen-templates"
+default-features = false
+features = ["getrandom"]
+
+[build-dependencies]
+blueprint-metadata = "0.1.6"
+blueprint-build-utils = { git = "https://github.com/webb-tools/gadget", branch = "donovan/eigen-templates" }
+
+[dev-dependencies]
+testcontainers = { version = "0.20.1" }
+
+[features]
+default = ["std"]
+std = ["gadget-sdk/std"]
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "{{project-name}}"
+path = "src/main.rs"
+
+[package.metadata.blueprint]
+manager = { Evm = "HelloBlueprint" }
+
+[[package.metadata.gadget.Native.sources]]
+owner = "{{gh-username}}"
+repo = "{{project-name}}"
+tag = "0.1.0"
+binaries = [
+    { arch = "Amd64", os = "Linux", name = "amd64-linux-{{project-name}}-gadget" },
+    { arch = "Arm64", os = "Linux", name = "arm64-linux-{{project-name}}-gadget" },
+]

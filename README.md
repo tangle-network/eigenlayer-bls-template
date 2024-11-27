@@ -1,4 +1,4 @@
-# <h1 align="center"> An EigenLayer AVS 🌐 </h1>
+c# <h1 align="center"> An EigenLayer AVS 🌐 </h1>
 
 **A simple Hello World AVS for EigenLayer with the BLS-based Contract Configuration**
 
@@ -8,6 +8,32 @@ Before you can run this project, you will need to have the following software in
 
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Forge](https://getfoundry.sh)
+
+You will also need to install [cargo-tangle](https://crates.io/crates/cargo-tangle), our CLI tool for creating and
+deploying Tangle Blueprints:
+
+To install the Tangle CLI, run the following command:
+
+> Supported on Linux, MacOS, and Windows (WSL2)
+
+```bash
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/tangle-network/gadget/releases/download/cargo-tangle-v0.1.2/cargo-tangle-installer.sh | sh
+```
+
+Or, if you prefer to install the CLI from crates.io:
+
+```bash
+cargo install cargo-tangle --force # to get the latest version.
+```
+
+## 🚀 Getting Started
+
+Once `cargo-tangle` is installed, you can create a new project with the following command:
+
+```sh
+cargo tangle blueprint create --name <project-name> --eigenlayer <type>
+```
+where `<project-name>` is the name of the project that will be generated, and `<type>` is BLS or ECDSA. If you aren't sure which type to use, you likely want the default: BLS. If you don't specify a type, it will default to BLS.
 
 ## 📚 Overview
 

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.13;
 
 import "eigenlayer-contracts/src/contracts/libraries/BytesLib.sol";
-import "contracts/src/IHelloTaskManager.sol";
+import "contracts/src/ITangleTaskManager.sol";
 //import "@eigenlayer-middleware/src/ServiceManagerBase.sol";
 import "eigenlayer-middleware/src/ServiceManagerBase.sol";
 
@@ -10,17 +10,17 @@ import "eigenlayer-middleware/src/ServiceManagerBase.sol";
  * @title Primary entrypoint for procuring services from Hello.
  * @author Layr Labs, Inc.
  */
-contract HelloServiceManager is ServiceManagerBase {
+contract TangleServiceManager is ServiceManagerBase {
     using BytesLib for bytes;
 
-    IHelloTaskManager
-        public immutable helloTaskManager;
+    ITangleTaskManager
+        public immutable TangleTaskManager;
 
     /// @notice when applied to a function, ensures that the function is only callable by the `registryCoordinator`.
-    modifier onlyHelloTaskManager() {
+    modifier onlyTangleTaskManager() {
         require(
-            msg.sender == address(helloTaskManager),
-            "onlyHelloTaskManager: not from credible squaring task manager"
+            msg.sender == address(TangleTaskManager),
+            "onlyTangleTaskManager: not from credible squaring task manager"
         );
         _;
     }
@@ -30,7 +30,7 @@ contract HelloServiceManager is ServiceManagerBase {
         IRewardsCoordinator _rewardsCoordinator,
         IRegistryCoordinator _registryCoordinator,
         IStakeRegistry _stakeRegistry,
-        IHelloTaskManager _helloTaskManager
+        ITangleTaskManager _TangleTaskManager
     )
         ServiceManagerBase(
             _avsDirectory,
@@ -39,7 +39,7 @@ contract HelloServiceManager is ServiceManagerBase {
             _stakeRegistry
         )
     {
-        helloTaskManager = _helloTaskManager;
+        TangleTaskManager = _TangleTaskManager;
     }
 
     /// @notice Called in the event of challenge resolution, in order to forward a call to the Slasher, which 'freezes' the `operator`.
@@ -47,7 +47,7 @@ contract HelloServiceManager is ServiceManagerBase {
     ///      We recommend writing slashing logic without integrating with the Slasher at this point in time.
     function freezeOperator(
         address operatorAddr
-    ) external onlyHelloTaskManager {
+    ) external onlyTangleTaskManager {
         // slasher.freezeOperator(operatorAddr);
     }
 }

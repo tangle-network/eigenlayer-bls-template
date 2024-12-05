@@ -40,17 +40,14 @@ alloy-transport = { version = "0.5" }
 alloy-transport-http = { version = "0.5" }
 serde = { version = "1.0.213", features = ["derive"] }
 
-# TODO: Replace with release once merged and released
 [dependencies.gadget-sdk]
-#version = "0.4.0"
 git = "https://github.com/webb-tools/gadget"
-branch = "donovan/eigen-templates"
 default-features = false
 features = ["getrandom"]
 
 [build-dependencies]
-blueprint-metadata = "0.1.6"
-blueprint-build-utils = { git = "https://github.com/webb-tools/gadget", branch = "donovan/eigen-templates" }
+blueprint-metadata = {  git = "https://github.com/webb-tools/gadget" }
+blueprint-build-utils = { git = "https://github.com/webb-tools/gadget" }
 
 [dev-dependencies]
 testcontainers = { version = "0.23.1" }

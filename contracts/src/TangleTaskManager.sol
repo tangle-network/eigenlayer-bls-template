@@ -10,15 +10,15 @@ import {RegistryCoordinator} from "eigenlayer-middleware/src/RegistryCoordinator
 import {BLSSignatureChecker, IRegistryCoordinator} from "eigenlayer-middleware/src/BLSSignatureChecker.sol";
 import {OperatorStateRetriever} from "eigenlayer-middleware/src/OperatorStateRetriever.sol";
 import "eigenlayer-middleware/src/libraries/BN254.sol";
-import "contracts/src/IHelloTaskManager.sol";
+import "contracts/src/ITangleTaskManager.sol";
 
-contract HelloTaskManager is
+contract TangleTaskManager is
     Initializable,
     OwnableUpgradeable,
     Pausable,
     BLSSignatureChecker,
     OperatorStateRetriever,
-    IHelloTaskManager
+ITangleTaskManager
 {
     using BN254 for BN254.G1Point;
 

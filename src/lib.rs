@@ -12,13 +12,13 @@ sol!(
     #[allow(missing_docs)]
     #[sol(rpc)]
     #[derive(Debug, Serialize, Deserialize)]
-    HelloTaskManager,
-    "contracts/out/HelloTaskManager.sol/HelloTaskManager.json"
+    TangleTaskManager,
+    "contracts/out/TangleTaskManager.sol/TangleTaskManager.json"
 );
 
 load_abi!(
-    HELLO_TASK_MANAGER_ABI_STRING,
-    "contracts/out/HelloTaskManager.sol/HelloTaskManager.json"
+    TANGLE_TASK_MANAGER_ABI_STRING,
+    "contracts/out/TangleTaskManager.sol/TangleTaskManager.json"
 );
 
 lazy_static! {
@@ -37,9 +37,9 @@ pub struct ExampleContext {
     id = 0,
     params(who),
     event_listener(
-        listener = EvmContractEventListener<HelloTaskManager::NewTaskCreated>,
-        instance = HelloTaskManager,
-        abi = HELLO_TASK_MANAGER_ABI_STRING,
+        listener = EvmContractEventListener<TangleTaskManager::NewTaskCreated>,
+        instance = TangleTaskManager,
+        abi = TANGLE_TASK_MANAGER_ABI_STRING,
         pre_processor = example_pre_processor,
     ),
 )]
@@ -49,7 +49,7 @@ pub fn say_hello(context: ExampleContext, who: String) -> Result<String, Infalli
 
 /// Example pre-processor for handling inbound events
 async fn example_pre_processor(
-    (_event, log): (HelloTaskManager::NewTaskCreated, alloy_rpc_types::Log),
+    (_event, log): (TangleTaskManager::NewTaskCreated, alloy_rpc_types::Log),
 ) -> Result<(String,), gadget_sdk::Error> {
     let who = log.address();
     Ok((who.to_string(),))

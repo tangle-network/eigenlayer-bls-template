@@ -14,12 +14,12 @@ rust-version = "1.81"
 
 [dependencies]
 # Gadget
-blueprint-sdk = { path = "../gadget-workspace/crates/sdk", default-features = false, features = ["eigenlayer", "evm", "macros", "build"] }
+blueprint-sdk = { git = "https://github.com/tangle-network/gadget-workspace.git", default-features = false, features = ["eigenlayer", "evm", "macros", "build"] }
 serde = { version = "1.0.188", features = ["derive"] }
 
 
 [build-dependencies]
-blueprint-sdk = { path = "../gadget-workspace/crates/sdk", default-features = false, features = ["build"] }
+blueprint-sdk = { git = "https://github.com/tangle-network/gadget-workspace.git", default-features = false, features = ["build"] }
 
 [features]
 default = ["std"]

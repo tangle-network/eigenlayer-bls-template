@@ -1,14 +1,14 @@
-use alloy_primitives::Address;
 use {{project-name | snake_case}} as blueprint;
 use blueprint::{TangleTaskManager, TASK_MANAGER_ADDRESS};
-use color_eyre::Result;
-use gadget_sdk as sdk;
-use gadget_sdk::utils::evm::get_provider_http;
-use sdk::runners::eigenlayer::EigenlayerBLSConfig;
-use sdk::runners::BlueprintRunner;
+use blueprint_sdk::alloy::primitives::Address;
+use blueprint_sdk::logging::info;
+use blueprint_sdk::macros::main;
+use blueprint_sdk::runners::core::runner::BlueprintRunner;
+use blueprint_sdk::runners::eigenlayer::bls::EigenlayerBLSConfig;
+use blueprint_sdk::utils::evm::get_provider_http;
 
-#[sdk::main(env)]
-async fn main() -> Result<()> {
+#[main(env)]
+async fn main() {
     // Create your service context
     // Here you can pass any configuration or context that your service needs.
     let context = blueprint::ExampleContext {
@@ -24,13 +24,13 @@ async fn main() -> Result<()> {
     // Create the event handler from the job
     let say_hello_job = blueprint::SayHelloEventHandler::new(contract, context);
 
-    tracing::info!("Starting the event watcher ...");
+    info!("Starting the event watcher ...");
     let eigen_config = EigenlayerBLSConfig::new(Address::default(), Address::default());
     BlueprintRunner::new(eigen_config, env)
         .job(say_hello_job)
         .run()
         .await?;
 
-    tracing::info!("Exiting...");
+    info!("Exiting...");
     Ok(())
 }

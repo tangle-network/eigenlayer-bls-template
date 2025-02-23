@@ -1,8 +1,8 @@
 [[dependencies]]
 name = "eigenlayer-middleware"
-version = "0.2.1"
+version = "0.5.4"
 git = "https://github.com/Layr-Labs/eigenlayer-middleware.git"
-rev = "74438b7915c35ca5a0d312654716160c2499169d"
+rev = "2475ab8b8c7698e69bb18f3a19e0c518381f24df"
 
 [[dependencies]]
 name = "forge-std"

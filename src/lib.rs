@@ -41,13 +41,15 @@ pub struct ExampleContext {
     id = 0,
     params(who),
     event_listener(
-        listener = EvmContractEventListener<TangleTaskManager::NewTaskCreated>,
+        listener = EvmContractEventListener<ExampleContext, TangleTaskManager::NewTaskCreated>,
         instance = TangleTaskManager,
         abi = TANGLE_TASK_MANAGER_ABI_STRING,
         pre_processor = example_pre_processor,
     ),
 )]
 pub fn say_hello(context: ExampleContext, who: String) -> Result<String, Infallible> {
+    blueprint_sdk::logging::trace!("Successfully ran job function!");
+    println!("Successfully ran job function!");
     Ok(format!("Hello, {who}!"))
 }
 

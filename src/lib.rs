@@ -4,6 +4,7 @@ use blueprint_sdk::alloy::sol;
 use blueprint_sdk::config::GadgetConfiguration;
 use blueprint_sdk::event_listeners::evm::EvmContractEventListener;
 use blueprint_sdk::job;
+use blueprint_sdk::logging::info;
 use blueprint_sdk::macros::load_abi;
 use blueprint_sdk::std::convert::Infallible;
 use blueprint_sdk::std::sync::LazyLock;
@@ -49,7 +50,7 @@ pub struct ExampleContext {
 )]
 pub fn say_hello(context: ExampleContext, who: String) -> Result<String, Infallible> {
     blueprint_sdk::logging::trace!("Successfully ran job function!");
-    println!("Successfully ran job function!");
+    info!("Successfully ran job function!");
     Ok(format!("Hello, {who}!"))
 }
 

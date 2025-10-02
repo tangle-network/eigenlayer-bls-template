@@ -1,4 +1,4 @@
-use test_eigen_bls_blueprint as blueprint;
+use {{project-name | snake_case}} as blueprint;
 
 use blueprint::{AGGREGATOR_PRIVATE_KEY, TASK_MANAGER_ADDRESS};
 use std::sync::Arc;

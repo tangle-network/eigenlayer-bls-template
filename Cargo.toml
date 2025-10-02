@@ -10,16 +10,19 @@ repository = "https://github.com/{{gh-username}}/{{project-name}}"
 readme = "README.md"
 categories = ["cryptography", "cryptography::cryptocurrencies"]
 keywords = ["tangle", "blueprint", "avs"]
-rust-version = "1.81"
+rust-version = "1.88"
 
 [dependencies]
-# Gadget
-blueprint-sdk = { git = "https://github.com/tangle-network/gadget.git", default-features = false, features = ["std", "eigenlayer", "evm", "macros", "build"] }
-serde = { version = "1.0.208", features = ["derive"] }
+blueprint-sdk = { version = "0.1.0-alpha.19", default-features = false, features = ["std", "eigenlayer", "evm", "macros", "build"], git = "https://github.com/tangle-network/blueprint.git" }
+jsonrpc-core = { version = "18.0.0", default-features = false }
+jsonrpc-http-server = { version = "18.0.0", default-features = false }
+thiserror = "1.0"
+reqwest = "0.12"
+color-eyre = { version = "0.6", default-features = false }
 
 
 [build-dependencies]
-blueprint-sdk = { git = "https://github.com/tangle-network/gadget.git", default-features = false, features = ["std", "build"] }
+blueprint-sdk = { version = "0.1.0-alpha.19", default-features = false, features = ["std", "eigenlayer", "evm", "macros", "build"], git = "https://github.com/tangle-network/blueprint.git" }
 
 [features]
 default = ["std"]

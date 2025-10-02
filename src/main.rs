@@ -1,56 +1,87 @@
-use {{project-name | snake_case}} as blueprint;
-use blueprint::{TangleTaskManager, TASK_MANAGER_ADDRESS};
-use blueprint_sdk::alloy::primitives::{address, Address, U256};
-use blueprint_sdk::logging::{info, warn};
-use blueprint_sdk::macros::main;
-use blueprint_sdk::runners::core::runner::BlueprintRunner;
-use blueprint_sdk::runners::eigenlayer::bls::EigenlayerBLSConfig;
-use blueprint_sdk::utils::evm::get_provider_http;
+use test_eigen_bls_blueprint as blueprint;
 
-#[main(env)]
-async fn main() {
-    // Create your service context
-    // Here you can pass any configuration or context that your service needs.
-    let context = blueprint::ExampleContext {
-        config: env.clone(),
+use blueprint::{AGGREGATOR_PRIVATE_KEY, TASK_MANAGER_ADDRESS};
+use std::sync::Arc;
+use std::time::Duration;
+use blueprint_sdk::alloy::network::EthereumWallet;
+use blueprint_sdk::alloy::primitives::Address;
+use blueprint_sdk::alloy::signers::local::PrivateKeySigner;
+use blueprint_sdk::evm::producer::{PollingConfig, PollingProducer};
+use blueprint_sdk::evm::util::get_wallet_provider_http;
+use blueprint_sdk::runner::BlueprintRunner;
+use blueprint_sdk::runner::config::BlueprintEnvironment;
+use blueprint_sdk::runner::eigenlayer::bls::EigenlayerBLSConfig;
+use blueprint_sdk::{Router, info, tokio};
+
+use blueprint::contexts::aggregator::AggregatorContext;
+use blueprint::contexts::client::AggregatorClient;
+use blueprint::contexts::combined::CombinedContext;
+use blueprint::jobs::initialize_task::{initialize_bls_task, INITIALIZE_TASK_JOB_ID};
+// TODO: Replace with your context name
+use blueprint::contexts::example_context::ExampleContext;
+use blueprint::jobs::example_task::{example_task, EXAMPLE_JOB_ID};
+
+#[tokio::main]
+async fn main() -> Result<(), blueprint_sdk::Error> {
+    let env = BlueprintEnvironment::load()?;
+
+    let signer: PrivateKeySigner = AGGREGATOR_PRIVATE_KEY
+        .parse()
+        .expect("failed to generate wallet ");
+    let wallet = EthereumWallet::from(signer);
+    let provider = get_wallet_provider_http(env.http_rpc_endpoint.clone(), wallet.clone());
+    let server_address = format!("{}:{}", "127.0.0.1", 8081);
+
+    // TODO: Replace with your context name
+    let context = ExampleContext {
+        client: AggregatorClient::new(&server_address)
+            .map_err(|e| blueprint_sdk::Error::Other(e.to_string()))?,
+        std_config: env.clone(),
     };
 
-    // Get the provider
-    let rpc_endpoint = env.http_rpc_endpoint.clone();
-    let provider = get_provider_http(&rpc_endpoint);
+    // Create the aggregator context
+    let aggregator_context = AggregatorContext::new(
+        server_address,
+        *TASK_MANAGER_ADDRESS,
+        wallet.clone(),
+        env.clone(),
+    )
+    .await
+    .map_err(|e| blueprint_sdk::Error::Other(e.to_string()))?;
 
-    // Create an instance of your task manager
-    let contract = TangleTaskManager::new(*TASK_MANAGER_ADDRESS, provider);
 
-    // Create the event handler from the job
-    let say_hello_job = blueprint::SayHelloEventHandler::new(contract, context.clone());
+    // Create the combined context for both tasks
+    let combined_context = CombinedContext::new(
+        context,
+        Some(aggregator_context.clone()),
+        env.clone(),
+    );
+    let client = Arc::new(provider);
 
-    // Spawn a task to create a task - this is just for testing/example purposes
+     // Create producer for task events
+     let task_producer = PollingProducer::new(
+        client.clone(),
+        PollingConfig::default().poll_interval(Duration::from_secs(1)),
+    )
+    .await
+    .map_err(|e| blueprint_sdk::Error::Other(e.to_string()))?;
+
     info!("Spawning a task to create a task on the contract...");
-    blueprint_sdk::tokio::spawn(async move {
-        let provider = get_provider_http(&rpc_endpoint);
-        let contract = TangleTaskManager::new(*TASK_MANAGER_ADDRESS, provider);
-        loop {
-            blueprint_sdk::tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-            // We use the Anvil Account #4 as the Task generator address
-            let task = contract
-                .createNewTask(U256::from(5), 100u32, vec![0].into())
-                .from(address!("15d34AAf54267DB7D7c367839AAf71A00a2C6A65"));
-            let receipt = task.send().await.unwrap().get_receipt().await.unwrap();
-            if receipt.status() {
-                info!("Task created successfully");
-            } else {
-                warn!("Task creation failed");
-            }
-        }
-    });
-
-    info!("Starting the event watcher ...");
     let eigen_config = EigenlayerBLSConfig::new(Address::default(), Address::default());
-    BlueprintRunner::new(eigen_config, env)
-        .job(say_hello_job)
-        .run()
-        .await?;
+    BlueprintRunner::builder(eigen_config, BlueprintEnvironment::default())
+    .router(
+        Router::new()
+            .route(EXAMPLE_JOB_ID, example_task)
+            .route(INITIALIZE_TASK_JOB_ID, initialize_bls_task)
+            .with_context(combined_context),
+    )
+    .producer(task_producer)
+    .background_service(aggregator_context)
+    .with_shutdown_handler(async {
+        blueprint_sdk::info!("Shutting down task manager service");
+    })
+    .run()
+    .await?;
 
     info!("Exiting...");
     Ok(())

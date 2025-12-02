@@ -22,7 +22,7 @@ jobs:
             --define project-description="An example blueprint"
             --define project-homepage="https://tangle.tools"
             --define flakes=true
-            --define docker=true
+            --define container=true
             --define base-image="rustlang/rust:nightly"
             --define ci=true
             --define rust-ci=true
@@ -33,9 +33,12 @@ jobs:
           version: nightly
       - name: Show forge version
         run: forge --version
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: nightly-2025-10-20
+      - name: Install protobuf compiler
+        run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
       - run: |
           cp -r $PROJECT_NAME ${{ runner.temp }}/
           cd ${{ runner.temp }}/$PROJECT_NAME

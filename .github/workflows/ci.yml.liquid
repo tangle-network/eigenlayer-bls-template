@@ -19,13 +19,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - uses: dtolnay/rust-toolchain@nightly
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly-2024-10-13
+          toolchain: nightly-2025-10-20
           components: rustfmt
 
       - name: Check Formatting
-        run: cargo fmt -- --check
+        run: cargo +nightly-2025-10-20 fmt -- --check
 
   lint:
     timeout-minutes: 120
@@ -46,9 +47,10 @@ jobs:
       - name: Install Solidity Dependencies
         run: forge soldeer update -d
 
-      - uses: dtolnay/rust-toolchain@nightly
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly-2024-10-13
+          toolchain: nightly-2025-10-20
           components: clippy
 
       - uses: swatinem/rust-cache@v2
@@ -82,9 +84,10 @@ jobs:
       - name: Install Solidity Dependencies
         run: forge soldeer update -d
 
-      - uses: dtolnay/rust-toolchain@nightly
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly-2024-10-13
+          toolchain: nightly-2025-10-20
           components: clippy
 
       - uses: swatinem/rust-cache@v2

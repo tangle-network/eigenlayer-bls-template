@@ -33,9 +33,10 @@ jobs:
           version: nightly
       - name: Show forge version
         run: forge --version
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: nightly-2025-10-20
       - name: Install protobuf compiler
         run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
       - run: |

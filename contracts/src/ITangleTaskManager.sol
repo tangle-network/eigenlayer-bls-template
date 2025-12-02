@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.13;
 
-import "@eigenlayer-middleware/src/libraries/BN254.sol";
-
 interface ITangleTaskManager {
     // EVENTS
     event NewTaskCreated(uint32 indexed taskIndex, Task task);
@@ -10,10 +8,6 @@ interface ITangleTaskManager {
     event TaskResponded(TaskResponse taskResponse, TaskResponseMetadata taskResponseMetadata);
 
     event TaskCompleted(uint32 indexed taskIndex);
-
-    event TaskChallengedSuccessfully(uint32 indexed taskIndex, address indexed challenger);
-
-    event TaskChallengedUnsuccessfully(uint32 indexed taskIndex, address indexed challenger);
 
     // STRUCTS
     struct Task {
@@ -59,14 +53,6 @@ interface ITangleTaskManager {
 
     /// @notice Returns the current 'taskNumber' for the middleware
     function taskNumber() external view returns (uint32);
-
-    // NOTE: this function raises challenge to existing tasks.
-    function raiseAndResolveChallenge(
-        Task calldata task,
-        TaskResponse calldata taskResponse,
-        TaskResponseMetadata calldata taskResponseMetadata,
-        BN254.G1Point[] memory pubkeysOfNonSigningOperators
-    ) external;
 
     /// @notice Returns the TASK_RESPONSE_WINDOW_BLOCK
     function getTaskResponseWindowBlock() external view returns (uint32);

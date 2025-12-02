@@ -39,8 +39,6 @@ pub struct ExampleContext {
     pub std_config: BlueprintEnvironment,
 }
 
-pub const EXAMPLE_JOB_ID: u32 = 0;
-
 /// Example task that responds to a task created event
 /// This function is triggered by the NewTaskCreated event emitted by the TangleTaskManager contract
 /// This function response to greeting `Task.message`

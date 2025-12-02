@@ -13,16 +13,17 @@ keywords = ["tangle", "blueprint", "avs"]
 rust-version = "1.88"
 
 [dependencies]
-blueprint-sdk = { version = "0.1.0-alpha.19", default-features = false, features = ["std", "eigenlayer", "evm", "macros", "build"], git = "https://github.com/tangle-network/blueprint.git" }
+blueprint-sdk = { version = "0.1.0-alpha.19", default-features = false, features = ["std", "eigenlayer", "evm", "macros", "build", "testing"], git = "https://github.com/tangle-network/blueprint.git" }
+serde = { version = "1.0.208", features = ["derive"] }
 jsonrpc-core = { version = "18.0.0", default-features = false }
 jsonrpc-http-server = { version = "18.0.0", default-features = false }
-thiserror = "1.0"
-reqwest = "0.12"
+thiserror = { version = "2.0.17", default-features = false }
+reqwest = { version = "0.12.22", default-features = false }
 color-eyre = { version = "0.6", default-features = false }
 
 
 [build-dependencies]
-blueprint-sdk = { version = "0.1.0-alpha.19", default-features = false, features = ["std", "eigenlayer", "evm", "macros", "build"], git = "https://github.com/tangle-network/blueprint.git" }
+blueprint-sdk = { version = "0.1.0-alpha.19", default-features = false, features = ["std", "eigenlayer", "evm", "macros", "build", "testing"], git = "https://github.com/tangle-network/blueprint.git" }
 
 [features]
 default = ["std"]

@@ -1,11 +1,17 @@
+pub mod error;
+
+use crate::error::TaskError;
+use crate::TangleTaskManager::NewTaskCreated;
 use blueprint_sdk::alloy::primitives::{address, Address};
-use blueprint_sdk::alloy::rpc::types::Log;
+use blueprint_sdk::alloy::sol_types::{SolEvent, SolValue};
 use blueprint_sdk::alloy::sol;
+use blueprint_sdk::info;
 use blueprint_sdk::runner::config::BlueprintEnvironment;
-use blueprint_sdk::macros::load_abi;
-use std::convert::Infallible;
-use std::sync::LazyLock;
+use blueprint_sdk::extract::Context;
+use blueprint_sdk::evm::extract::BlockEvents;
 use serde::{Deserialize, Serialize};
+use std::env;
+use std::sync::LazyLock;
 
 sol!(
     #[allow(missing_docs)]
@@ -15,47 +21,55 @@ sol!(
     "contracts/out/TangleTaskManager.sol/TangleTaskManager.json"
 );
 
-load_abi!(
-    TANGLE_TASK_MANAGER_ABI_STRING,
-    "contracts/out/TangleTaskManager.sol/TangleTaskManager.json"
-);
-
 pub static TASK_MANAGER_ADDRESS: LazyLock<Address> = LazyLock::new(|| {
-    std::env::var("TASK_MANAGER_ADDRESS")
+    env::var("TASK_MANAGER_ADDRESS")
         .map(|addr| addr.parse().expect("Invalid TASK_MANAGER_ADDRESS"))
         .unwrap_or_else(|_| address!("0000000000000000000000000000000000000000"))
 });
 
+pub static PRIVATE_KEY: LazyLock<String> = LazyLock::new(|| {
+    env::var("PRIVATE_KEY").unwrap_or_else(|_| {
+        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string()
+    })
+});
+
 #[derive(Clone)]
 pub struct ExampleContext {
-    pub config: BlueprintEnvironment,
+    pub env: BlueprintEnvironment,
 }
 
-/// Returns "Hello, {who}!"
-pub async fn say_hello(context: ExampleContext, who: String) -> Result<String, Infallible> {
-    blueprint_sdk::info!("Successfully ran job function!");
-    println!("Successfully ran job function!");
-    Ok(format!("Hello, {who}!"))
-}
+/// Example task that responds to a task created event
+#[blueprint_sdk::macros::debug_job]
+pub async fn example_task(
+    Context(_ctx): Context<ExampleContext>,
+    BlockEvents(events): BlockEvents,
+) -> Result<(), TaskError> {
+    info!("Successfully ran job function!");
 
-/// Example pre-processor for handling inbound events
-pub async fn example_pre_processor(
-    (_event, log): (TangleTaskManager::NewTaskCreated, Log),
-) -> Option<(String,)> {
-    let who = log.address();
-    Some((who.to_string(),))
-}
+    let task_created_events = events.iter().filter_map(|log| {
+        NewTaskCreated::decode_log(&log.inner)
+            .map(|event| event.data)
+            .ok()
+    });
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+    for task_created in task_created_events {
+        let task = task_created.task;
+        let task_index = task_created.taskIndex;
 
-    #[test]
-    fn it_works() {
-        let config = BlueprintEnvironment::default();
-        let context = ExampleContext { config };
-        let rt = tokio::runtime::Runtime::new().unwrap();
-        let result = rt.block_on(say_hello(context, "Alice".into())).unwrap();
-        assert_eq!(result, "Hello, Alice!");
+        info!("Task created: {}", task_index);
+
+        let message_bytes = &task.message;
+        let greeting = std::str::from_utf8(message_bytes)
+            .unwrap_or("<invalid utf8>")
+            .to_string();
+        info!("Greeting: {}", greeting);
+
+        let greeting_result = format!("Hello, {}!", greeting);
+        info!("Greeting result: {}", greeting_result);
+
+        let message = SolValue::abi_encode(&greeting_result.as_bytes());
+        info!("Result message: {:?}", message);
     }
+
+    Ok(())
 }

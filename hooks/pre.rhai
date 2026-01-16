@@ -33,12 +33,12 @@ if !check_bool("flakes") {
     file::delete("./.envrc");
 }
 
-if !variable::is_set("docker") {
-    let docker = variable::prompt("Do you want to generate a Dockerfile for your gadget?", true);
-    variable::set("docker", docker);
+if !variable::is_set("container") {
+    let container = variable::prompt("Do you want to generate a Dockerfile for your gadget?", true);
+    variable::set("container", container);
 }
 
-if check_bool("docker") {
+if check_bool("container") {
     if !variable::is_set("base-image") {
         let base_image = variable::prompt("What base image should be used?", "rustlang/rust:nightly");
         variable::set("base-image", base_image);

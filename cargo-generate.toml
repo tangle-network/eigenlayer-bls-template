@@ -1,13 +1,57 @@
 [template]
 cargo_generate_version = ">=0.17.4"
-ignore = [".git", "blueprint.json", "blueprint.lock", ".github/workflows/verify-template.yml"]
+ignore = [".git", "blueprint.json", "blueprint.lock", ".github/workflows/verify-template.yml", ".github/workflows/release.yml"]
 
 [placeholders.gh-username]
 type = "string"
 prompt = "Your GitHub username (or organization)"
-# The username cannot end with a hyphen, too, but
-# this requirement is not captured by the regex at the moment.
+default = "my-org"
 regex = "^[A-Za-z0-9][A-Za-z0-9-]{0,38}$"
+
+[placeholders.project-description]
+type = "string"
+prompt = "A short description"
+default = "A Tangle EigenLayer BLS blueprint"
+
+[placeholders.project-authors]
+type = "string"
+prompt = "Author name"
+default = "Tangle Network"
+
+[placeholders.project-homepage]
+type = "string"
+prompt = "Your project homepage"
+default = "https://tangle.tools"
+
+[placeholders.flakes]
+type = "bool"
+prompt = "Do you want to use Nix & Nix Flakes?"
+default = false
+
+[placeholders.container]
+type = "bool"
+prompt = "Do you want to generate a Dockerfile?"
+default = true
+
+[placeholders.base-image]
+type = "string"
+prompt = "What base image should be used?"
+default = "rustlang/rust:nightly"
+
+[placeholders.ci]
+type = "bool"
+prompt = "Do you want to generate Github Actions workflows?"
+default = true
+
+[placeholders.rust-ci]
+type = "bool"
+prompt = "Create generic Rust workflows? (Rustfmt, Clippy, Cargo test)"
+default = true
+
+[placeholders.release-ci]
+type = "bool"
+prompt = "Create a workflow for automatically releasing to Github releases?"
+default = true
 
 [hooks]
 pre = ["hooks/pre.rhai"]
